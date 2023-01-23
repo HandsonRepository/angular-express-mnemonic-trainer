@@ -1,11 +1,50 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model answers {
+  id             Int           @id @default(autoincrement())
+  value          String        @db.VarChar(255)
+  position       Int
+  examination_id Int?
+  examinations   examinations? @relation(fields: [examination_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_baa2a4992b35d75732153a4a371")
+
+  @@unique([examination_id, position], map: "IDX_d32b2bd0b847f0dceeedf8465c")
+}
+
+model examinations {
+  id                 Int                  @id @default(autoincrement())
+  remembered_at      DateTime?            @db.DateTime(0)
+  answered_at        DateTime?            @db.DateTime(0)
+  created_at         DateTime             @db.DateTime(0)
+  answers            answers[]
+  examinations_words examinations_words[]
+}
+
+model examinations_words {
+  examination_id Int
+  word_id        Int
+  examinations   examinations @relation(fields: [examination_id], references: [id], onDelete: Cascade, map: "FK_443488b793d0dcd4a2b39fd8751")
+  words          words        @relation(fields: [word_id], references: [id], onDelete: Cascade, map: "FK_4ac2e9bcf81c974035f7df65fc8")
+
+  @@id([examination_id, word_id])
+  @@index([examination_id], map: "IDX_443488b793d0dcd4a2b39fd875")
+  @@index([word_id], map: "IDX_4ac2e9bcf81c974035f7df65fc")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement())
+  timestamp BigInt
+  name      String @db.VarChar(255)
+}
+
+model words {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique(map: "IDX_975efd50047f02b2266a8d8e9c") @db.VarChar(255)
+  examinations_words examinations_words[]
 }
