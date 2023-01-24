@@ -1,4 +1,5 @@
 import express from 'express';
+import { PrismaClient } from '@prisma/client'
 
 const app: express.Express = express();
 app.use(express.json());
@@ -16,19 +17,8 @@ app.listen(3000, () => {
   console.log("Start on port 3000.");
 })
 
-type User = {
-  id: number
-  name: string
-  email: string
-};
+const prisma = new PrismaClient()
 
-const users: User[] = [
-  { id: 1, name: "User1", email: "user1@test.local" },
-  { id: 2, name: "User2", email: "user2@test.local" },
-  { id: 3, name: "User3", email: "user3@test.local" }
-]
-
-//一覧取得
-app.get('/users', (req: express.Request, res: express.Response) => {
-  res.send(JSON.stringify(users));
+app.get('/words', async (req: express.Request, res: express.Response) => {
+  res.send(JSON.stringify(await prisma.words.findMany({ take: 10 })));
 })
