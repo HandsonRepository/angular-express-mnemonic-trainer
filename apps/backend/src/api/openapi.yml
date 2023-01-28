@@ -1,0 +1,82 @@
+openapi: 3.0.2
+info:
+  title: Mnemonic trainer API
+  description: Mnemonic trainer documentation
+  contact:
+    name: HandsonRepository
+    url: https://github.com/HandsonRepository/angular-express-mnemonic-trainer
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /words:
+    get:
+      summary: Get words
+      operationId: getWords
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '201':
+          $ref: '#/components/responses/MultipleWordsResponse'
+components:
+  schemas:
+    Word:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+    GenericErrorModel:
+      required:
+        - errors
+      type: object
+      properties:
+        errors:
+          required:
+            - body
+          type: object
+          properties:
+            body:
+              type: array
+              items:
+                type: string
+  parameters:
+    offsetParam:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+      description: The number of items to skip before starting to collect the result set.
+    limitParam:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 20
+      description: The numbers of items to return.
+  responses:
+    MultipleWordsResponse:
+      description: Multiple words
+      content:
+        application/json:
+          schema:
+            required:
+              - words
+              - wordsCount
+            type: object
+            properties:
+              words:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Word'
+              wordsCount:
+                type: integer

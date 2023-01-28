@@ -1,0 +1,182 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Mnemonic trainer API",
+    "description": "Mnemonic trainer documentation",
+    "contact": {
+      "name": "HandsonRepository",
+      "url": "https://github.com/HandsonRepository/angular-express-mnemonic-trainer"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "paths": {
+    "/words": {
+      "get": {
+        "summary": "Get words",
+        "operationId": "getWords",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "The number of items to skip before starting to collect the result set."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 20
+            },
+            "description": "The numbers of items to return."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Multiple words",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "words",
+                    "wordsCount"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "words": {
+                      "type": "array",
+                      "items": {
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "wordsCount": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Word": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GenericErrorModel": {
+        "required": [
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "required": [
+              "body"
+            ],
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "offsetParam": {
+        "in": "query",
+        "name": "offset",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "description": "The number of items to skip before starting to collect the result set."
+      },
+      "limitParam": {
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 20
+        },
+        "description": "The numbers of items to return."
+      }
+    },
+    "responses": {
+      "MultipleWordsResponse": {
+        "description": "Multiple words",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": [
+                "words",
+                "wordsCount"
+              ],
+              "type": "object",
+              "properties": {
+                "words": {
+                  "type": "array",
+                  "items": {
+                    "required": [
+                      "name"
+                    ],
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "wordsCount": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
